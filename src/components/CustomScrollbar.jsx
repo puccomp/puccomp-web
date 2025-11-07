@@ -1,4 +1,3 @@
-import React from 'react'
 import { GlobalStyles, useTheme } from '@mui/material'
 
 const CustomScrollbar = () => {

@@ -160,7 +160,7 @@ const ProjectProposalForm = () => {
           <Button
             variant="outlined"
             startIcon={<ArrowBackIosIcon />}
-            onClick={() => navigate('/')}
+            onClick={() => navigate(-1)}
             size="small"
           >
             Voltar

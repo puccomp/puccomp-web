@@ -1,6 +1,5 @@
-import React from 'react'
-import { Box, Typography, IconButton, useTheme } from '@mui/material'
 
+import { Box, Typography, IconButton, useTheme } from '@mui/material'
 // ICONS
 import PhoneIcon from '@mui/icons-material/Phone'
 import InstagramIcon from '@mui/icons-material/Instagram'
@@ -78,7 +77,7 @@ const Footer = () => {
         </IconButton>
 
         <IconButton
-          href="https://github.com/EJ-ICEI-PUC-Minas"
+          href="https://github.com/puccomp"
           target="_blank"
           rel="noopener"
         >

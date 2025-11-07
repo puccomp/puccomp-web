@@ -9,10 +9,9 @@ import {
   Button,
   Dialog,
   DialogContent,
-  Backdrop,
-  CircularProgress,
   Divider,
   Alert,
+  Skeleton,
 } from '@mui/material'
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
@@ -84,7 +83,7 @@ const ProjectDetails = ({ open, handleClose, project }) => {
             {formatProjectName(project.name)}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {formatDateTextual(project.created_at)}
+            {formatDateTextual(project.createdAt)}
           </Typography>
         </Box>
 
@@ -149,6 +148,41 @@ const ProjectDetails = ({ open, handleClose, project }) => {
   )
 }
 
+const ProjectsSkeleton = () => (
+  <Grid2 container spacing={4}>
+    <Grid2 size={{ sm: 12, md: 6 }}>
+      <Skeleton variant="text" width="60%" height={56} sx={{ mb: 2 }} />
+
+      <Skeleton variant="text" width="90%" />
+      <Skeleton variant="text" width="80%" />
+      <Skeleton variant="text" width="85%" sx={{ mb: 4 }} />
+
+      <Stack
+        spacing={2}
+        sx={{
+          display: { xs: 'none', sm: 'flex' },
+        }}
+      >
+        <Skeleton variant="rounded" height={90} />
+        <Skeleton variant="rounded" height={90} />
+        <Skeleton variant="rounded" height={90} />
+      </Stack>
+    </Grid2>
+
+    <Grid2 size={{ sm: 12, md: 6 }}>
+      <Skeleton
+        variant="rounded"
+        height={467}
+        sx={{
+          display: { xs: 'none', sm: 'block' },
+          height: '100%',
+          minHeight: 467,
+        }}
+      />
+    </Grid2>
+  </Grid2>
+)
+
 const OurProjectsSection = ({ bgColor }) => {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -161,13 +195,16 @@ const OurProjectsSection = ({ bgColor }) => {
   } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
+      const PLACEHOLDER_IMAGE_URL = '/placeholder-unavailable-image.png'
+
       const response = await fetchAllProjects()
-      const filteredProjects = response
-        .filter((project) => project.image_url)
-        .slice(0, 3)
+      const top3Projects = response.slice(0, 3).map((project) => ({
+        ...project,
+        image_url: project.image_url || PLACEHOLDER_IMAGE_URL,
+      }))
 
       const enrichedProjects = await Promise.all(
-        filteredProjects.map(async (project) => {
+        top3Projects.map(async (project) => {
           try {
             const [contributorsRes, technologiesRes] = await Promise.all([
               fetch(project.contributors_url),
@@ -189,6 +226,7 @@ const OurProjectsSection = ({ bgColor }) => {
           }
         })
       )
+      console.log('Enriched Projects:', enrichedProjects)
 
       return enrichedProjects
     },
@@ -200,16 +238,12 @@ const OurProjectsSection = ({ bgColor }) => {
 
   return (
     <UniformSection bgColor={bgColor}>
-      {isLoading && (
-        <Backdrop open>
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      )}
       {isError && (
         <Alert severity="error">
           Ocorreu um erro ao carregar sessão dos projetos.
         </Alert>
       )}
+      {isLoading && !isError && <ProjectsSkeleton />}
       {!isLoading && !isError && (
         <Grid2 container spacing={4}>
           {/* LEFT SECTION */}
@@ -269,7 +303,7 @@ const OurProjectsSection = ({ bgColor }) => {
                     {formatProjectName(selectedFeature.name)}
                   </Typography>
                   <Typography color="text.secondary" variant="body2">
-                    {formatDateTextual(selectedFeature.created_at)}
+                    {formatDateTextual(selectedFeature.createdAt)}
                   </Typography>
                 </Stack>
 
@@ -301,7 +335,7 @@ const OurProjectsSection = ({ bgColor }) => {
                 <ProjectCard
                   key={project.id}
                   name={project.name}
-                  createdAt={project.created_at}
+                  createdAt={project.createdAt}
                   language={project.language}
                   selected={selectedItemIndex === index}
                   onClick={() => setSelectedItemIndex(index)}

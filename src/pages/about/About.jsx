@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import {
   Box,
@@ -70,7 +70,7 @@ const About = () => {
   }
 
   const {
-    data: memories,
+    data: memories = [],
     isLoading,
     error,
   } = useQuery({
@@ -83,6 +83,20 @@ const About = () => {
   const isSm = useMediaQuery(
     theme.breakpoints.up('sm') && theme.breakpoints.down('md')
   )
+
+  useEffect(() => {
+    locations.forEach((location) => {
+      const img = new Image()
+      img.src = location.image
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const noMemories = !isLoading && !error && memories?.length === 0
+
+  useEffect(() => {
+    if (noMemories && tabValue === 0) setTabValue(1)
+  }, [noMemories, tabValue])
 
   return (
     <>
@@ -142,7 +156,7 @@ const About = () => {
               onChange={handleChangeTab}
               aria-label="tabs example"
             >
-              <Tab label="Memórias" />
+              <Tab label="Memórias" disabled={noMemories} />
               <Tab label="História" />
               <Tab label="Valores" disabled />
             </Tabs>
@@ -154,7 +168,7 @@ const About = () => {
             breakpoints={{ isXs: isXs, isSm: isSm }}
           />
           <HistoryTab value={tabValue} index={1} />
-          <TabContent value={tabValue} index={3}>
+          <TabContent value={tabValue} index={2}>
             <Paragraph>
               Conteúdo da aba "Valores". Insira os valores ou missões da equipe
               ou da empresa.

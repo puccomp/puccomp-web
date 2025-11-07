@@ -1,6 +1,9 @@
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { CssBaseline, ThemeProvider, Toolbar, Box } from '@mui/material'
+import { createRoot } from 'react-dom/client' // <-- CORRIGIDO
+import { 
+  createBrowserRouter, 
+  RouterProvider // <-- CORRIGIDO (importado de react-router-dom)
+} from 'react-router-dom'
+import { ThemeProvider, } from '@mui/material'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 // STYLES
@@ -10,9 +13,7 @@ import theme from './styles/theme'
 import { MembersProvider } from './contexts/MembersContext'
 
 // COMPONENTS
-import Header from './components/Header'
-import Footer from './components/Footer'
-import CustomScrollbar from './components/CustomScrollbar'
+import AppLayout from './components/AppLayout'
 
 // PAGES
 import Home from './pages/home/Home'
@@ -23,38 +24,25 @@ import ProjectSubmission from './pages/ProjectSubmission'
 
 const queryClient = new QueryClient()
 
+const router = createBrowserRouter([
+  {
+    element: <AppLayout />,
+    children: [
+      { path: '/', element: <Home /> },
+      { path: '/sobre', element: <About /> },
+      { path: '/equipe', element: <Team /> },
+      { path: '/torna-se-parte', element: <Apply /> },
+      { path: '/desenvolva', element: <ProjectSubmission /> },
+    ],
+  },
+])
+
 createRoot(document.getElementById('root')).render(
   <>
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <CustomScrollbar />
         <MembersProvider>
-          <BrowserRouter>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                minHeight: '100vh',
-              }}
-            >
-              <Header />
-              <Toolbar />
-              <Box
-                component="main"
-                sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}
-              >
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/sobre" element={<About />} />
-                  <Route path="/equipe" element={<Team />} />
-                  <Route path="/torna-se-parte" element={<Apply />} />
-                  <Route path="/desenvolva" element={<ProjectSubmission />} />
-                </Routes>
-              </Box>
-              <Footer />
-            </Box>
-          </BrowserRouter>
+          <RouterProvider router={router} />
         </MembersProvider>
       </ThemeProvider>
     </QueryClientProvider>

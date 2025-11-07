@@ -5,6 +5,8 @@
  * @returns {string} The formatted date in "DD/MM/YYYY".
  */
 const formatDateNumeric = (date) => {
+  if (!date) return 'N/D' 
+  
   const [year, month, day] = date.split('-')
   return `${day}/${month}/${year}`
 }
@@ -16,6 +18,8 @@ const formatDateNumeric = (date) => {
  * @returns {string} The formatted date in "day month year" (e.g., "February 17, 2025").
  */
 const formatDateTextual = (date) => {
+  if (!date) return 'Data indisponível' 
+  
   return new Date(date).toLocaleDateString('pt-BR', {
     year: 'numeric',
     month: 'long',

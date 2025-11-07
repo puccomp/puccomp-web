@@ -1,4 +1,3 @@
-import React from 'react'
 import { useTheme } from '@emotion/react'
 import { alpha, Grid2, Typography } from '@mui/material'
 import ServiceCard from '../../components/cards/ServiceCard'
