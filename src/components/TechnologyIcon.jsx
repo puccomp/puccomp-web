@@ -4,7 +4,7 @@ const TechnologyIcon = ({ technology }) => {
   return (
     <Tooltip title={technology.name} placement="top" arrow>
       <Avatar
-        src={technology.icon_url}
+        src={technology.iconUrl}
         alt={technology.name}
         variant="rounded"
         sx={{ m: 0.5 }}
