@@ -105,8 +105,11 @@ const ProjectDetails = ({ open, handleClose, project }) => {
                 Tecnologias
               </Typography>
               <Stack direction="row" flexWrap="wrap">
-                {project.technologies.map((tech) => (
-                  <TechnologyIcon key={tech.id} technology={tech} />
+                {project.technologies.map((projectTech) => (
+                  <TechnologyIcon
+                    key={projectTech.technologyId}
+                    technology={projectTech.technology}
+                  />
                 ))}
               </Stack>
             </Grid2>
